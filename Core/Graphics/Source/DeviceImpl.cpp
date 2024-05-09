@@ -44,6 +44,9 @@ namespace Babylon::Graphics
         init.callback = &m_bgfxCallback;
 
         init.platformData.context = config.Device;
+#if TARGET_OS_VISION
+        init.platformData.worldTracking = config.WorldTracking;
+#endif
         UpdateWindow(config.Window);
         UpdateSize(config.Width, config.Height);
         UpdateMSAA(config.MSAASamples);
