@@ -969,6 +969,7 @@ namespace xr
                 return false;
             }
             
+            shouldRender = true;
             return true;
         }
         
@@ -1113,19 +1114,23 @@ namespace xr
                 const size_t textureIndex = cp_view_texture_map_get_texture_index(viewTexture);
                 assert(textureIndex < numTextures);
                 
-                id<MTLTexture> colorTexture = cp_drawable_get_color_texture(drawable, textureIndex);
-                xrView.ColorTexturePointer = (__bridge_retained void*)colorTexture;
-                xrView.ColorTextureFormat = metalTextureFormatToXr(colorTexture.pixelFormat);
-                xrView.ColorTextureSize.Width = colorTexture.width;
-                xrView.ColorTextureSize.Height = colorTexture.height;
-                xrView.ColorTextureSize.Depth = colorTexture.arrayLength;
+                {
+                    id<MTLTexture> colorTexture = cp_drawable_get_color_texture(drawable, textureIndex);
+                    xrView.ColorTexturePointer = (__bridge_retained void*)colorTexture;
+                    xrView.ColorTextureFormat = metalTextureFormatToXr(colorTexture.pixelFormat);
+                    xrView.ColorTextureSize.Width = colorTexture.width;
+                    xrView.ColorTextureSize.Height = colorTexture.height;
+                    xrView.ColorTextureSize.Depth = colorTexture.arrayLength;
+                }
                 
-                id<MTLTexture> depthTexture = cp_drawable_get_depth_texture(drawable, textureIndex);
-                xrView.DepthTexturePointer = (__bridge_retained void*)depthTexture;
-                xrView.DepthTextureFormat = metalTextureFormatToXr(depthTexture.pixelFormat);
-                xrView.DepthTextureSize.Width = depthTexture.width;
-                xrView.DepthTextureSize.Height = depthTexture.height;
-                xrView.DepthTextureSize.Depth = colorTexture.arrayLength;
+                {
+                    id<MTLTexture> depthTexture = cp_drawable_get_depth_texture(drawable, textureIndex);
+                    xrView.DepthTexturePointer = (__bridge_retained void*)depthTexture;
+                    xrView.DepthTextureFormat = metalTextureFormatToXr(depthTexture.pixelFormat);
+                    xrView.DepthTextureSize.Width = depthTexture.width;
+                    xrView.DepthTextureSize.Height = depthTexture.height;
+                    xrView.DepthTextureSize.Depth = depthTexture.arrayLength;
+                }
                 
                 xrView.DepthNearZ = depthRange[0];
                 xrView.DepthFarZ = depthRange[1];
