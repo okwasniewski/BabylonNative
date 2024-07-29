@@ -333,6 +333,133 @@ struct WorldTrackingProvider
 // --------------------------------------------------------------------------------
 
 
+struct CPView
+{
+    cp_view_t _Nonnull _view;
+    
+    CPView(cp_view_t _Nonnull view)
+        : _view(view)
+    {
+    }
+};
+
+struct CPDrawable
+{
+    cp_drawable_t _Nullable _drawable;
+    
+    CPDrawable(cp_drawable_t _Nonnull drawable)
+        : _drawable(drawable)
+    {
+        assert(nil != _drawable);
+    }
+    
+    CPDrawable(void)
+        : _drawable(nil)
+    {
+    }
+
+    inline bool operator!() const
+    {
+        return nil == _drawable;
+    }
+
+    /** Returns the number of separate views to draw for the frame. */
+    inline size_t getViewCount(void) const
+    {
+        assert(nil != _drawable);
+        return cp_drawable_get_view_count(_drawable);
+    }
+    
+    /** Returns the specified view from the drawable. */
+    inline CPView getView(size_t index) const
+    {
+        assert(nil != _drawable);
+        return CPView(cp_drawable_get_view(_drawable, index));
+    }
+    
+    /** Returns the position and orientation you specified for the frame. */
+    inline ARDeviceAnchor getDeviceAnchor(void) const
+    {
+        assert(nil != _drawable);
+        return ARDeviceAnchor(cp_drawable_get_device_anchor(_drawable));
+    }
+    
+    /** Specifies the world position and orientation to apply to the current frame. */
+    inline void setDeviceAnchor(ar_device_anchor_t deviceAnchor)
+    {
+        assert(nil != _drawable);
+        cp_drawable_set_device_anchor(_drawable, deviceAnchor);
+    }
+    /** Specifies the world position and orientation to apply to the current frame. */
+    inline void setDeviceAnchor(const ARDeviceAnchor &deviceAnchor)
+    {
+        setDeviceAnchor(deviceAnchor._anchor);
+    }
+    
+    /** Returns the number of color and depth texture available in the drawable. */
+    inline size_t getTextureCount(void) const
+    {
+        assert(nil != _drawable);
+        return cp_drawable_get_texture_count(_drawable);
+    }
+    
+    /** Returns the depth texture at the specified index in the drawable. */
+    inline id<MTLTexture> getDepthTexture(size_t index) const
+    {
+        assert(nil != _drawable);
+        return cp_drawable_get_depth_texture(_drawable, index);
+    }
+    
+    /** Returns the color texture at the specified index in the drawable. */
+    inline id<MTLTexture> getColorTexture(size_t index) const
+    {
+        assert(nil != _drawable);
+        return cp_drawable_get_color_texture(_drawable, index);
+    }
+    
+    /** Encodes a notification event to the specified command buffer to present the drawable's content onscreen. */
+    inline void encodePresent(id<MTLCommandBuffer> _Nonnull commandBuffer)
+    {
+        assert(nil != _drawable);
+        cp_drawable_encode_present(_drawable, commandBuffer);
+    }
+    
+    /** Returns the distances to the far and near clipping planes you use during drawing. */
+    inline simd_float2 getDepthRange(void) const
+    {
+        assert(nil != _drawable);
+        return cp_drawable_get_depth_range(_drawable);
+    }
+    
+    /** Sets the distances to the near and far clipping planes for the current drawable. */
+    inline void setDepthRange(simd_float2 depthRange)
+    {
+        cp_drawable_set_depth_range(_drawable, depthRange);
+    }
+    
+    /** Returns a value that indicates the current operational state of the drawable type. */
+    inline cp_drawable_state getState() const
+    {
+        assert(nil != _drawable);
+        return cp_drawable_get_state(_drawable);
+    }
+    
+    /** Returns the timing information for the frame of the specified drawable. */
+    inline cp_frame_timing_t getFrameTiming() const
+    {
+        assert(nil != _drawable);
+        return cp_drawable_get_frame_timing(_drawable);
+    }
+    
+    /** Returns the sequential index of the frame. */
+    inline cp_compositor_frame_index_t getPrenestationFrameIndex() const
+    {
+        assert(nil != _drawable);
+        return cp_drawable_get_presentation_frame_index(_drawable);
+    }
+};
+
+
 // Our non-standard function overload
 simd_float4x4 simd_make_float4x4(simd_double4x4 m)
 {
