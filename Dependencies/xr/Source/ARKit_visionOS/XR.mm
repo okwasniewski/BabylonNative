@@ -227,6 +227,7 @@ struct WorldTrackingProvider
     WorldTrackingProvider(ar_world_tracking_configuration_t configuration)
         : _provider(ar_world_tracking_provider_create(configuration))
     {
+        assert(nil != configuration);
         AR_RETAIN(_provider);
     }
     
@@ -551,8 +552,8 @@ namespace xr
 {
     struct XrContextARKit /*: public IXrContextARKit*/
     {
-        ARSession Session{};
-        WorldTrackingProvider WorldTracking{nullptr};
+        ARSession Session;
+        WorldTrackingProvider WorldTracking;
         cp_layer_renderer_t LayerRenderer{nullptr};
         cp_layer_renderer_configuration_t LayerRendererConfiguration{nullptr};
         cp_layer_renderer_layout LayerRendererLayout;
