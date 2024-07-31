@@ -757,6 +757,7 @@ namespace xr
 
             shouldEndSession = sessionEnded;
             shouldRestartSession = false;
+          currentCommandBuffer = [commandQueue commandBuffer];
             
             // Handle layer renderer states
             cp_layer_renderer_t layerRenderer = HmdImpl.XrContext->LayerRenderer;
@@ -916,13 +917,13 @@ namespace xr
             WorldTrackingProvider& worldTracking = HmdImpl.XrContext->WorldTracking;
             return worldTracking.getState() == ar_data_provider_state_running;
         }
+        id<MTLCommandBuffer> currentCommandBuffer;
 
     private:
         bool sessionEnded{ false };
         id<MTLDevice> metalDevice{};
 
         id<MTLCommandQueue> commandQueue;
-        id<MTLCommandBuffer> currentCommandBuffer;
         std::vector<ar_anchor_t> nativeAnchors{};
 
         /*
@@ -1172,6 +1173,7 @@ namespace xr
 
             if (nil != drawable)
             {
+              cp_drawable_encode_present(drawable, sessionImpl.currentCommandBuffer);
                 // TODO(mario): A bit more edgy case: drawable can be NULL if `queryDrawable()` in `BeginRender()` failed, hinting that the layer is in "paused" or "invalidated" state.
                 //              How should we behave in this case? Should we still call `frame.endSubmisison()` or just completly reject this frame?
                 //              The tutorial code will skip calling the `endSubmission()` in such case...
@@ -1408,5 +1410,11 @@ namespace xr
     {
         UNUSED_PARAMETER(requests);
         throw std::runtime_error("not implemented");
+    }
+
+    bool System::Session::TrySetFeaturePointCloudEnabled(bool enabled) const
+    {
+        UNUSED_PARAMETER(enabled);
+        return false;
     }
 }

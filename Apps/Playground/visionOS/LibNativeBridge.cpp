@@ -45,7 +45,7 @@ bool LibNativeBridge::initialize() {
 
   runtime.emplace();
 
-  runtime->Dispatch([](Napi::Env env)
+  runtime->Dispatch([this](Napi::Env env)
   {
       device->AddToJavaScript(env);
 
@@ -63,7 +63,10 @@ bool LibNativeBridge::initialize() {
 
       Babylon::Plugins::NativeOptimizations::Initialize(env);
       nativeXr.emplace(Babylon::Plugins::NativeXr::Initialize(env));
-//      nativeXr->UpdateWindow(xrView);
+      nativeXr->UpdateWindow((__bridge void*)m_layerRenderer);
+          nativeXr->SetSessionStateChangedCallback([](bool isXrActive){
+            NSLog(@"XR SESSION IS: %d", isXrActive);
+          });
 //      nativeXr->SetSessionStateChangedCallback([](bool isXrActive){ ::isXrActive = isXrActive; });
 
       nativeInput = &Babylon::Plugins::NativeInput::CreateForJavaScript(env);
