@@ -43,8 +43,8 @@ if(APPLE)
         set(SOURCES
             ${SOURCES}
             "visionOS/App.swift"
-            "visionOS/LibNativeBridge.cpp"
-            "visionOS/LibNativeBridge.hpp"
+            "visionOS/LibNativeBridge.mm"
+            "visionOS/LibNativeBridge.h"
             )
         set(ADDITIONAL_LIBRARIES PRIVATE NativeXr)
         set_source_files_properties(${SCRIPTS} ${BABYLON_SCRIPTS} ${DEPENDENCIES} PROPERTIES MACOSX_PACKAGE_LOCATION "Scripts")
